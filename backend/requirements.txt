@@ -7,3 +7,4 @@ uvicorn[standard]
 redis
 python-dotenv
 python-json-logger
+aiolimiter

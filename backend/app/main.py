@@ -41,6 +41,10 @@ async def add_observability_headers(request: Request, call_next):
     
     return response
 
+from app.api.routers import oracle
+
 @app.get("/api/v1/health")
 async def health_check():
     return {"status": "healthy", "version": settings.VERSION}
+
+app.include_router(oracle.router, prefix="/api/v1")
