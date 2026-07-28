@@ -1,34 +1,46 @@
-from fastapi import FastAPI
-from contextlib import asynccontextmanager
-from typing import AsyncGenerator
+import time
+import uuid
+import logging
+from fastapi import FastAPI, Request
+from fastapi.responses import JSONResponse
+from app.config import settings
+from app.observability.logger import setup_logging
 
-from api.routes.health import router as health_router
-from api.routes.brief import router as brief_router
-from api.routes.standings import router as standings_router
-
-@asynccontextmanager
-async def lifespan(app: FastAPI) -> AsyncGenerator[None, None]:
-    # Initialize services on startup
-    print("Initializing The Oracle API...")
-    yield
-    # Cleanup on shutdown
-    print("Shutting down The Oracle API...")
+# Initialize logging
+setup_logging()
+logger = logging.getLogger(__name__)
 
 app = FastAPI(
-    title="The Oracle",
-    description="Single modular system for organizing and presenting Football-Data.org info for bettors. No AI, no predictions, no ML.",
-    version="0.1.0",
-    lifespan=lifespan,
+    title=settings.PROJECT_NAME,
+    version=settings.VERSION,
 )
 
-app.include_router(health_router, prefix="/api/v1")
-app.include_router(brief_router, prefix="/api/v1")
-app.include_router(standings_router, prefix="/api/v1")
+@app.middleware("http")
+async def add_observability_headers(request: Request, call_next):
+    request_id = str(uuid.uuid4())
+    start_time = time.time()
+    
+    # Attach request_id to state
+    request.state.request_id = request_id
+    
+    try:
+        response = await call_next(request)
+    except Exception as exc:
+        logger.error(f"Unhandled exception: {exc}", extra={"request_id": request_id})
+        response = JSONResponse(
+            status_code=500,
+            content={"detail": "Internal Server Error"}
+        )
+        
+    process_time = (time.time() - start_time) * 1000
+    formatted_process_time = f"{process_time:.2f}ms"
+    
+    # Append headers
+    response.headers["X-Request-ID"] = request_id
+    response.headers["X-Response-Time"] = formatted_process_time
+    
+    return response
 
-@app.get("/api/v1")
-async def root():
-    return {"message": "The Oracle API - No AI, no predictions, no ML"}
-
-if __name__ == "__main__":
-    import uvicorn
-    uvicorn.run(app, host="0.0.0.0", port=8000, log_level="info")
+@app.get("/api/v1/health")
+async def health_check():
+    return {"status": "healthy", "version": settings.VERSION}

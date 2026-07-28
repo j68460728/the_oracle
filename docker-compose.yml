@@ -1,0 +1,62 @@
+x-common-config: &common-config
+  restart: unless-stopped
+  logging:
+    driver: "json-file"
+    options:
+      max-size: "10m"
+      max-file: "3"
+
+services:
+  redis:
+    <<: *common-config
+    image: redis:7-alpine
+    ports:
+      - "15813:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - the_oracle_net
+    volumes:
+      - redis_data:/data
+
+  api:
+    <<: *common-config
+    build:
+      context: .
+      dockerfile: backend/Dockerfile
+    ports:
+      - "15801:8000"
+    env_file:
+      - .env
+    volumes:
+      - ./backend:/app/backend
+    depends_on:
+      redis:
+        condition: service_healthy
+    networks:
+      - the_oracle_net
+
+  frontend:
+    <<: *common-config
+    build:
+      context: .
+      dockerfile: frontend/Dockerfile
+    ports:
+      - "15800:3000"
+    env_file:
+      - .env
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    networks:
+      - the_oracle_net
+
+networks:
+  the_oracle_net:
+    driver: bridge
+
+volumes:
+  redis_data:

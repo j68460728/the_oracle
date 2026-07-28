@@ -50,12 +50,20 @@ docker compose down
 
 ## Documentación Oficial
 
-Por favor, consulta los siguientes documentos para entender el diseño y reglas del proyecto.
+Consulta **[GOVERNANCE.md](GOVERNANCE.md)** para entender la política documental del proyecto. La documentación se divide en dos categorías:
 
-- [VISION.md](VISION.md): Definición del producto, alcance, problemas que resuelve y usuario objetivo.
-- [ARCHITECTURE.md](ARCHITECTURE.md): Diseño técnico del MVP, capas del sistema, flujo de datos (Adapter Pattern), y estrategias de caché.
-- [DECISIONS.md](DECISIONS.md): Registro de Decisiones Arquitectónicas (ADR) aprobadas.
-- [AUDITORIA_FOOTBALL_DATA_API.md](AUDITORIA_FOOTBALL_DATA_API.md): Auditoría de cobertura del plan Free de Football-Data.org.
-- [NECESIDADES_INFORMACION_PREPARTIDO.md](NECESIDADES_INFORMACION_PREPARTIDO.md): Catálogo de información requerida para el análisis.
-- [INGENIERIA_NECESIDADES_VARIABLES.md](INGENIERIA_NECESIDADES_VARIABLES.md): Descomposición en variables medibles.
-- [MAPEO_API_FREE_NECESIDADES.md](MAPEO_API_FREE_NECESIDADES.md): Mapeo de necesidades hacia los endpoints de la API.
+### Documentación de Gobernanza (Normativa)
+*Es la única fuente de verdad para implementar el MVP.*
+
+- **[VISION.md](governance/VISION.md)**: Definición del producto, alcance, problemas que resuelve y usuario objetivo.
+- **[ARCHITECTURE.md](governance/ARCHITECTURE.md)**: Diseño técnico del MVP, capas del sistema, flujo de datos (Adapter Pattern), y estrategias de caché.
+- **[DECISIONS.md](governance/DECISIONS.md)**: Registro de Decisiones Arquitectónicas (ADR) aprobadas.
+- **[GOVERNANCE.md](GOVERNANCE.md)**: Política y jerarquía de la documentación.
+
+### Documentación de Investigación (Histórica)
+*Referencia sobre análisis previos; no modifican las decisiones normativas.*
+
+- [AUDITORIA_FOOTBALL_DATA_API.md](research/AUDITORIA_FOOTBALL_DATA_API.md)
+- [NECESIDADES_INFORMACION_PREPARTIDO.md](research/NECESIDADES_INFORMACION_PREPARTIDO.md)
+- [INGENIERIA_NECESIDADES_VARIABLES.md](research/INGENIERIA_NECESIDADES_VARIABLES.md)
+- [MAPEO_API_FREE_NECESIDADES.md](research/MAPEO_API_FREE_NECESIDADES.md)

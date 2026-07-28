@@ -2,6 +2,9 @@
 
 Single modular system for organizing and presenting Football-Data.org info for bettors. No AI, no predictions, no ML.
 
+## Gobernanza (Governance)
+**CRITICAL RULE**: Do not create a new folder, file, pattern, dependency, or layer without justifying it with a document from [docs/GOVERNANCE.md](docs/GOVERNANCE.md). All architectural or structural decisions must be driven by the governance documentation. No exceptions.
+
 ## Stack
 
 - **Backend**: Python 3.14, FastAPI, httpx, Pydantic v2
