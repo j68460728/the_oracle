@@ -13,6 +13,7 @@ Estos documentos son la **única fuente de verdad** para la implementación del 
 - **[README.md](README.md)**: Onboarding, cómo ejecutar el proyecto y políticas operativas.
 - **[VISION.md](governance/VISION.md)**: El qué y el por qué del producto. Alcance del MVP y no-objetivos.
 - **[ARCHITECTURE.md](governance/ARCHITECTURE.md)**: El cómo del diseño técnico. Flujo de datos, contratos API, TTLs de caché y estándares.
+- **[DESIGN_SYSTEM.md](governance/DESIGN_SYSTEM.md)**: Manual de diseño normativo, espaciados, colores semánticos e iconografía.
 - **[DECISIONS.md](governance/DECISIONS.md)**: Registro histórico de Decisiones de Arquitectura (ADR) aprobadas.
 - **[GOVERNANCE.md](GOVERNANCE.md)**: Este documento, que dicta la jerarquía documental.
 

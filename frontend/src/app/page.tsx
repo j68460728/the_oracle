@@ -16,11 +16,11 @@ export default function Home() {
   return (
     <div className="flex h-screen bg-[#070b14] text-slate-200 font-sans overflow-hidden">
       <AppSidebar />
-      <main className="flex-1 overflow-y-auto p-4 md:p-8">
-        <div className="max-w-6xl mx-auto">
-          <div className="mb-6">
-            <h2 className="text-2xl font-bold text-white">Oracle Brief</h2>
-            <p className="text-sm text-slate-400">Análisis prepartido completo y contextual</p>
+      <main className="flex-1 overflow-y-auto p-6 md:p-10">
+        <div className="max-w-[1400px] mx-auto">
+          <div className="mb-8">
+            <h2 className="text-3xl font-extrabold text-white tracking-tight">Oracle Brief</h2>
+            <p className="text-sm text-slate-400 mt-1">Análisis prepartido completo y contextual</p>
           </div>
 
           <BriefHeader 
@@ -29,16 +29,12 @@ export default function Home() {
             awayTeam={data.awayTeam} 
           />
 
-          {/* Fila 1: Resumen rápido, Forma reciente, Posición en Liga */}
-          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 mb-6">
+          {/* Fila 1: Resumen rápido y Posición en Liga */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8 items-start">
             <QuickSummary 
               summary={data.summary} 
               homeTeamName={data.homeTeam.shortName} 
               awayTeamName={data.awayTeam.shortName} 
-            />
-            <RecentForm 
-              homeTeam={data.homeTeam} 
-              awayTeam={data.awayTeam} 
             />
             <LeaguePosition 
               homeTeam={data.homeTeam} 
@@ -47,13 +43,21 @@ export default function Home() {
             />
           </div>
 
-          {/* Fila 2: H2H, Goles, Defensa, Jugadores Clave */}
-          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6 mb-6">
+          {/* Fila 2: H2H y Forma Reciente */}
+          <div className="grid grid-cols-1 xl:grid-cols-2 gap-8 mb-8 items-start">
             <HeadToHead 
               history={data.headToHead} 
               homeTeam={data.homeTeam} 
               awayTeam={data.awayTeam} 
             />
+            <RecentForm 
+              homeTeam={data.homeTeam} 
+              awayTeam={data.awayTeam} 
+            />
+          </div>
+
+          {/* Fila 3: Goles y Solidez Defensiva */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8 items-start">
             <GoalsAndAttack 
               homeTeam={data.homeTeam} 
               awayTeam={data.awayTeam} 
@@ -62,18 +66,22 @@ export default function Home() {
               homeTeam={data.homeTeam} 
               awayTeam={data.awayTeam} 
             />
-            <KeyPlayers 
-              homeTeam={data.homeTeam} 
-              awayTeam={data.awayTeam} 
-            />
           </div>
 
-          {/* Fila 3: Contexto */}
-          <div className="grid grid-cols-1 gap-6 mb-8">
-            <ContextFactors factors={data.contextFactors} />
+          {/* Fila 3: Contexto y Jugadores Clave */}
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-10 items-start">
+            <div className="lg:col-span-2 flex flex-col">
+              <ContextFactors factors={data.contextFactors} />
+            </div>
+            <div className="lg:col-span-1 flex flex-col">
+              <KeyPlayers 
+                homeTeam={data.homeTeam} 
+                awayTeam={data.awayTeam} 
+              />
+            </div>
           </div>
           
-          <div className="flex justify-between items-center text-xs text-slate-600 pb-8">
+          <div className="flex justify-between items-center text-xs text-slate-600 pb-10 border-t border-slate-900 pt-6">
             <p>Datos proporcionados por Football-Data.org | Actualizado: 11/05/2025 10:30 (GMT+2)</p>
             <p>The Oracle v1.0.0</p>
           </div>

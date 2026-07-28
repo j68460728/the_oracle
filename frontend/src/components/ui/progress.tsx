@@ -13,6 +13,7 @@ function Progress({
   return (
     <ProgressPrimitive.Root
       value={value}
+      getAriaValueText={(_, val) => `${val}%`}
       data-slot="progress"
       className={cn("flex flex-wrap gap-3", className)}
       {...props}
@@ -22,7 +23,7 @@ function Progress({
         <ProgressIndicator />
       </ProgressTrack>
     </ProgressPrimitive.Root>
-  )
+  );
 }
 
 function ProgressTrack({ className, ...props }: ProgressPrimitive.Track.Props) {
