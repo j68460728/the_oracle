@@ -15,15 +15,35 @@ export const MatchInfoSchema = z.object({
   time: z.string().nullable(),
   stadium: z.string().nullable(),
   city: z.string().nullable(),
-  weather: z.record(z.unknown()).nullable(),
+  weather: z.record(z.string(), z.unknown()).nullable(),
 });
 
 export const BriefSummarySchema = z.object({
-  home_strength_score: z.number(),
-  away_strength_score: z.number(),
-  edge: z.string(),
-  confidence: z.string(),
-  analysis: z.string(),
+  headline: z.string(),
+  key_factors: z.array(z.string()),
+  confidence: z.number(),
+  confidence_label: z.string(),
+});
+
+export const ScoringDetailSchema = z.object({
+  score: z.number(),
+  factors: z.record(z.string(), z.unknown()),
+});
+
+export const OracleScoringSchema = z.object({
+  home: ScoringDetailSchema,
+  away: ScoringDetailSchema,
+});
+
+export const DataAvailabilitySchema = z.object({
+  available: z.boolean(),
+  reason: z.string().nullable(),
+});
+
+export const BriefAvailabilitySchema = z.object({
+  h2h: DataAvailabilitySchema,
+  advanced_metrics: DataAvailabilitySchema,
+  injuries: DataAvailabilitySchema,
 });
 
 export const TeamIdentitySchema = z.object({
@@ -59,9 +79,9 @@ export const TeamBriefSchema = z.object({
   identity: TeamIdentitySchema,
   league: LeaguePerformanceSchema,
   form: RecentFormSchema,
-  attack: z.record(z.unknown()).nullable(),
-  defense: z.record(z.unknown()).nullable(),
-  key_player: z.record(z.unknown()).nullable(),
+  attack: z.record(z.string(), z.unknown()).nullable(),
+  defense: z.record(z.string(), z.unknown()).nullable(),
+  key_player: z.record(z.string(), z.unknown()).nullable(),
 });
 
 export const MatchHistorySchema = z.object({
@@ -106,9 +126,11 @@ export const BriefContextSchema = z.object({
 export const OracleBriefResponseSchema = z.object({
   metadata: BriefMetadataSchema,
   header: MatchInfoSchema,
-  summary: BriefSummarySchema,
   home_team: TeamBriefSchema,
   away_team: TeamBriefSchema,
+  scoring: OracleScoringSchema,
+  summary: BriefSummarySchema,
+  availability: BriefAvailabilitySchema,
   head_to_head: HeadToHeadBriefSchema,
   context: BriefContextSchema,
 });

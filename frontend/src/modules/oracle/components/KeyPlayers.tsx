@@ -1,6 +1,6 @@
 import { TeamBrief } from '@/types/domain/oracle';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Star } from 'lucide-react';
+import { Star, User } from 'lucide-react';
 
 interface KeyPlayersProps {
   homeTeam: TeamBrief;
@@ -12,8 +12,12 @@ export function KeyPlayers({ homeTeam, awayTeam }: KeyPlayersProps) {
     <div className="flex flex-col items-center flex-1 py-1">
       <div className="relative group mb-3">
         <div className="absolute inset-0 bg-emerald-500/10 rounded-full blur-md opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none" />
-        <div className="w-18 h-18 rounded-full overflow-hidden border-2 border-slate-850 bg-[#070b14] relative z-10 transition-transform duration-200 group-hover:scale-105">
-          <img src={player.photo} alt={player.name} className="w-full h-full object-cover" />
+        <div className="w-18 h-18 rounded-full overflow-hidden border-2 border-slate-850 bg-[#070b14] relative z-10 transition-transform duration-200 group-hover:scale-105 flex items-center justify-center">
+          {player.photo ? (
+            <img src={player.photo} alt={player.name} className="w-full h-full object-cover" />
+          ) : (
+            <User className="w-8 h-8 text-slate-600" />
+          )}
         </div>
       </div>
       <div className="font-bold text-sm text-slate-100 text-center">{player.name}</div>

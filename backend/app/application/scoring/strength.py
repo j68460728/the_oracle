@@ -1,7 +1,9 @@
-def calculate_strength(points_per_game: float, form_score: float, position: int, total_teams: int = 20) -> float:
+from typing import Tuple, Dict
+
+def calculate_strength(points_per_game: float, form_score: float, position: int, total_teams: int = 20) -> Tuple[int, Dict[str, int]]:
     """
-    Calcula una puntuación de fortaleza general (0-100) para un equipo.
-    Usa el rendimiento en liga (puntos por partido), la forma reciente (0-10) y la posición.
+    Calcula una puntuación de fortaleza general (0-100) para un equipo,
+    y desglosa los factores que contribuyeron a esa puntuación.
     """
     # Max PPG is theoretically 3.0. Scale to 50 points max.
     ppg_component = min(50.0, (points_per_game / 3.0) * 50.0)
@@ -17,4 +19,12 @@ def calculate_strength(points_per_game: float, form_score: float, position: int,
         pos_component = 10.0 # Default fallback
         
     strength = ppg_component + form_component + pos_component
-    return round(min(100.0, max(0.0, strength)), 1)
+    score = int(round(min(100.0, max(0.0, strength))))
+    
+    factors = {
+        "points_per_game": int(round(ppg_component)),
+        "form": int(round(form_component)),
+        "league_position": int(round(pos_component))
+    }
+    
+    return score, factors

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { OracleBriefResponse, TeamBriefSchema } from '../types/api/oracle-response';
 import { OracleBriefData, TeamBrief } from '../types/domain/oracle';
 import { z } from 'zod';
@@ -85,11 +86,35 @@ export function mapOracleResponseToDomain(response: OracleBriefResponse): Oracle
     },
     homeTeam: mapTeam(response.home_team),
     awayTeam: mapTeam(response.away_team),
+    scoring: {
+      home: {
+        score: response.scoring.home.score,
+        factors: response.scoring.home.factors as Record<string, number>,
+      },
+      away: {
+        score: response.scoring.away.score,
+        factors: response.scoring.away.factors as Record<string, number>,
+      },
+    },
     summary: {
-      homeStrength: response.summary.home_strength_score,
-      awayStrength: response.summary.away_strength_score,
-      edge: response.summary.edge as 'HOME' | 'AWAY' | 'EVEN',
-      textAnalysis: response.summary.analysis,
+      headline: response.summary.headline,
+      keyFactors: response.summary.key_factors,
+      confidence: response.summary.confidence,
+      confidenceLabel: response.summary.confidence_label,
+    },
+    availability: {
+      h2h: {
+        available: response.availability.h2h.available,
+        reason: response.availability.h2h.reason,
+      },
+      advancedMetrics: {
+        available: response.availability.advanced_metrics.available,
+        reason: response.availability.advanced_metrics.reason,
+      },
+      injuries: {
+        available: response.availability.injuries.available,
+        reason: response.availability.injuries.reason,
+      },
     },
     headToHead: {
       matches: response.head_to_head.matches.map(m => ({

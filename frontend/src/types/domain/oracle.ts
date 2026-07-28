@@ -78,11 +78,26 @@ export interface OracleBriefData {
   matchInfo: MatchInfo;
   homeTeam: TeamBrief;
   awayTeam: TeamBrief;
+  scoring: {
+    home: {
+      score: number;
+      factors: Record<string, number>;
+    };
+    away: {
+      score: number;
+      factors: Record<string, number>;
+    };
+  };
   summary: {
-    homeStrength: number; // 0-100
-    awayStrength: number; // 0-100
-    edge: 'HOME' | 'AWAY' | 'EVEN';
-    textAnalysis: string;
+    headline: string;
+    keyFactors: string[];
+    confidence: number;
+    confidenceLabel: string;
+  };
+  availability: {
+    h2h: { available: boolean; reason: string | null };
+    advancedMetrics: { available: boolean; reason: string | null };
+    injuries: { available: boolean; reason: string | null };
   };
   headToHead: {
     matches: MatchHistory[];

@@ -2,37 +2,42 @@ import { OracleBriefData } from '@/types/domain/oracle';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
-import { ArrowUpRight, TrendingUp, Info } from 'lucide-react';
+import { ArrowUpRight, TrendingUp, Info, CheckCircle2 } from 'lucide-react';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 
 interface QuickSummaryProps {
   summary: OracleBriefData['summary'];
+  scoring: OracleBriefData['scoring'];
   homeTeamName: string;
   awayTeamName: string;
 }
 
-export function QuickSummary({ summary, homeTeamName, awayTeamName }: QuickSummaryProps) {
-  const isHomeStronger = summary.homeStrength > summary.awayStrength;
-  const isAwayStronger = summary.awayStrength > summary.homeStrength;
+export function QuickSummary({ summary, scoring, homeTeamName, awayTeamName }: QuickSummaryProps) {
+  const isHomeStronger = scoring.home.score > scoring.away.score;
+  const isAwayStronger = scoring.away.score > scoring.home.score;
+  
+  let edgeTeam = 'Empate';
+  if (isHomeStronger) edgeTeam = homeTeamName;
+  if (isAwayStronger) edgeTeam = awayTeamName;
+
+  const confColor = summary.confidenceLabel === 'high' ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20' :
+                    summary.confidenceLabel === 'moderate' ? 'bg-amber-500/10 text-amber-400 border-amber-500/20' :
+                    'bg-slate-500/10 text-slate-400 border-slate-500/20';
 
   return (
-    <Card className="bg-[#0e1526] border-slate-800 text-slate-100 flex-1 rounded-xl shadow-lg">
+    <Card className="bg-[#0e1526] border-slate-800 text-slate-100 flex-1 rounded-xl shadow-lg h-full">
       <CardHeader className="pb-4 pt-6 px-6">
-        <div className="flex justify-between items-center">
+        <div className="flex justify-between items-start">
           <div>
-            <CardTitle className="text-lg font-bold text-slate-100">
-              Resumen rápido
+            <CardTitle className="text-lg font-bold text-slate-100 leading-tight">
+              {summary.headline}
             </CardTitle>
-            <p className="text-xs text-slate-400 mt-1">Panorama general del enfrentamiento</p>
+            <p className="text-xs text-slate-400 mt-1">Resumen estructurado</p>
           </div>
-          <Badge className={`py-1 px-2.5 flex items-center gap-1 border ${
-            summary.edge === 'HOME' ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20' : 
-            summary.edge === 'AWAY' ? 'bg-rose-500/10 text-rose-400 border-rose-500/20' : 
-            'bg-slate-800 text-slate-400 border-slate-700'
-          }`}>
+          <Badge className={`py-1 px-2.5 flex items-center gap-1 border shrink-0 ml-4 ${confColor}`}>
             <TrendingUp className="w-3.5 h-3.5" />
             <span className="text-[10px] font-bold tracking-wider uppercase">
-              Ventaja: {summary.edge === 'HOME' ? homeTeamName : summary.edge === 'AWAY' ? awayTeamName : 'Empate'}
+              Confianza: {summary.confidence}%
             </span>
           </Badge>
         </div>
@@ -43,7 +48,7 @@ export function QuickSummary({ summary, homeTeamName, awayTeamName }: QuickSumma
         <div className="flex flex-col gap-3.5">
           <div className="flex justify-between items-center text-xs text-slate-400 font-semibold uppercase tracking-wider">
             <span className="flex items-center gap-1.5">
-              Balance de poder
+              Balance de poder (Score)
               <Tooltip>
                 <TooltipTrigger>
                   <Info className="w-3.5 h-3.5 text-slate-500" />
@@ -53,6 +58,7 @@ export function QuickSummary({ summary, homeTeamName, awayTeamName }: QuickSumma
                 </TooltipContent>
               </Tooltip>
             </span>
+            <span className="text-slate-500 font-bold">Ventaja: {edgeTeam}</span>
           </div>
 
           <div className="grid grid-cols-2 gap-4">
@@ -61,10 +67,10 @@ export function QuickSummary({ summary, homeTeamName, awayTeamName }: QuickSumma
               <div className="flex justify-between items-baseline">
                 <span className="text-sm font-semibold text-slate-200">{homeTeamName}</span>
                 <span className={`text-lg font-black ${isHomeStronger ? 'text-emerald-400' : 'text-slate-400'}`}>
-                  {summary.homeStrength}%
+                  {scoring.home.score}
                 </span>
               </div>
-              <Progress value={summary.homeStrength} className={`h-2.5 bg-slate-800 ${isHomeStronger ? '[&>div]:bg-emerald-500' : '[&>div]:bg-slate-600'}`} />
+              <Progress value={scoring.home.score} className={`h-2.5 bg-slate-800 ${isHomeStronger ? '[&>div]:bg-emerald-500' : '[&>div]:bg-slate-600'}`} />
             </div>
 
             {/* Away Power */}
@@ -72,30 +78,42 @@ export function QuickSummary({ summary, homeTeamName, awayTeamName }: QuickSumma
               <div className="flex justify-between items-baseline">
                 <span className="text-sm font-semibold text-slate-200">{awayTeamName}</span>
                 <span className={`text-lg font-black ${isAwayStronger ? 'text-rose-400' : 'text-slate-400'}`}>
-                  {summary.awayStrength}%
+                  {scoring.away.score}
                 </span>
               </div>
-              <Progress value={summary.awayStrength} className={`h-2.5 bg-slate-800 ${isAwayStronger ? '[&>div]:bg-rose-500' : '[&>div]:bg-slate-600'}`} />
+              <Progress value={scoring.away.score} className={`h-2.5 bg-slate-800 ${isAwayStronger ? '[&>div]:bg-rose-500' : '[&>div]:bg-slate-600'}`} />
             </div>
           </div>
         </div>
 
-        {/* Home Advantage Indicator */}
-        <div className="flex flex-col gap-2">
-          <div className="flex justify-between items-center text-xs text-slate-400 font-semibold uppercase tracking-wider">
-            <span>Ventaja de localía</span>
-            <span className="text-emerald-400 font-bold">58% de efectividad</span>
+        {/* Factors Breakdown */}
+        <div className="grid grid-cols-2 gap-4 pt-4 border-t border-slate-800/80">
+          <div className="text-xs text-slate-400 flex flex-col gap-2">
+            <div className="flex justify-between"><span className="text-slate-500">Posición Liga:</span> <span>{scoring.home.factors.league_position} pts</span></div>
+            <div className="flex justify-between"><span className="text-slate-500">Rendimiento:</span> <span>{scoring.home.factors.points_per_game} pts</span></div>
+            <div className="flex justify-between"><span className="text-slate-500">Forma reciente:</span> <span>{scoring.home.factors.form} pts</span></div>
           </div>
-          <div className="flex h-2 w-full rounded-full overflow-hidden bg-slate-800">
-            <div className="h-full bg-emerald-500" style={{ width: '58%' }} />
-            <div className="h-full bg-slate-700/80" style={{ width: '42%' }} />
+          <div className="text-xs text-slate-400 flex flex-col gap-2">
+            <div className="flex justify-between"><span className="text-slate-500">Posición Liga:</span> <span>{scoring.away.factors.league_position} pts</span></div>
+            <div className="flex justify-between"><span className="text-slate-500">Rendimiento:</span> <span>{scoring.away.factors.points_per_game} pts</span></div>
+            <div className="flex justify-between"><span className="text-slate-500">Forma reciente:</span> <span>{scoring.away.factors.form} pts</span></div>
           </div>
         </div>
 
-        {/* Textual analysis */}
-        <div className="bg-[#070b14] border border-slate-800/80 rounded-lg p-4 text-sm text-slate-300 leading-relaxed relative overflow-hidden flex items-start gap-3">
-          <ArrowUpRight className="w-5 h-5 text-emerald-500 shrink-0 mt-0.5" />
-          <p>{summary.textAnalysis}</p>
+        {/* Textual analysis - Key Factors */}
+        <div className="bg-[#070b14] border border-slate-800/80 rounded-lg p-5 text-sm text-slate-300 leading-relaxed flex flex-col gap-3">
+          <div className="flex items-center gap-2 mb-1">
+            <ArrowUpRight className="w-5 h-5 text-emerald-500 shrink-0" />
+            <span className="font-semibold text-slate-200 uppercase text-xs tracking-wider">Factores Clave</span>
+          </div>
+          <ul className="space-y-2.5 flex flex-col">
+            {summary.keyFactors.map((factor, i) => (
+              <li key={i} className="flex gap-2.5 items-start text-slate-300">
+                <CheckCircle2 className="w-4 h-4 text-emerald-500/80 shrink-0 mt-0.5" />
+                <span className="leading-snug">{factor}</span>
+              </li>
+            ))}
+          </ul>
         </div>
       </CardContent>
     </Card>

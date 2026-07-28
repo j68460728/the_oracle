@@ -3,7 +3,8 @@ from app.domain.models import Team, Standing, Head2Head
 from app.application.dto.brief import (
     OracleBrief, BriefMetadata, MatchInfo, TeamIdentity, 
     LeaguePerformance, RecentForm, TeamBrief, 
-    BriefSummary, MatchHistory, HeadToHeadSummary, HeadToHeadBrief, BriefContext
+    BriefSummary, MatchHistory, HeadToHeadSummary, HeadToHeadBrief, BriefContext,
+    ScoringDetail, OracleScoring, DataAvailability, BriefAvailability
 )
 from app.application.scoring import strength, form, edge, summary
 
@@ -17,7 +18,7 @@ def build_oracle_brief(
 ) -> OracleBrief:
     """Pure function to construct the OracleBrief DTO without holding internal state."""
     
-    metadata = BriefMetadata(provider="football-data.org", cache="MISS", version="1.0", algorithm_version="strength-v1")
+    metadata = BriefMetadata(provider="football-data.org", cache="MISS", version="1.0", algorithm_version="strength-v2")
     
     match_info = MatchInfo(
         competition=competition_code,
@@ -27,29 +28,49 @@ def build_oracle_brief(
     home_brief = _build_team_brief(home_team, home_standing)
     away_brief = _build_team_brief(away_team, away_standing)
     
-    home_str = strength.calculate_strength(
+    home_str, home_factors = strength.calculate_strength(
         home_brief.league.points_per_game, 
         form.calculate_form_score(home_brief.form.form_array), 
         home_brief.league.position
     )
-    away_str = strength.calculate_strength(
+    away_str, away_factors = strength.calculate_strength(
         away_brief.league.points_per_game, 
         form.calculate_form_score(away_brief.form.form_array), 
         away_brief.league.position
     )
+    
     match_edge = edge.determine_edge(home_str, away_str)
-    confidence = summary.calculate_confidence(home_str, away_str)
-    analysis_text = summary.generate_insight_text(home_str, away_str, match_edge, home_team.short_name, away_team.short_name)
+    
+    structured_summary = summary.generate_structured_summary(
+        home_score=home_str,
+        away_score=away_str,
+        home_factors=home_factors,
+        away_factors=away_factors,
+        edge=match_edge,
+        home_name=home_team.short_name,
+        away_name=away_team.short_name
+    )
+    
+    oracle_scoring = OracleScoring(
+        home=ScoringDetail(score=home_str, factors=home_factors),
+        away=ScoringDetail(score=away_str, factors=away_factors)
+    )
     
     brief_summary = BriefSummary(
-        home_strength_score=home_str,
-        away_strength_score=away_str,
-        edge=match_edge,
-        confidence=confidence,
-        analysis=analysis_text
+        headline=structured_summary["headline"],
+        key_factors=structured_summary["key_factors"],
+        confidence=structured_summary["confidence"],
+        confidence_label=structured_summary["confidence_label"]
     )
     
     h2h_brief = _build_h2h_brief(h2h)
+    
+    # Establish availability dynamically
+    availability = BriefAvailability(
+        h2h=DataAvailability(available=bool(h2h), reason=None if h2h else "no_data_from_provider"),
+        advanced_metrics=DataAvailability(available=False, reason="provider_not_supported"),
+        injuries=DataAvailability(available=False, reason="provider_not_supported")
+    )
     
     context = BriefContext(
         stadium=home_team.venue,
@@ -59,9 +80,11 @@ def build_oracle_brief(
     return OracleBrief(
         metadata=metadata,
         header=match_info,
-        summary=brief_summary,
         home_team=home_brief,
         away_team=away_brief,
+        scoring=oracle_scoring,
+        summary=brief_summary,
+        availability=availability,
         head_to_head=h2h_brief,
         context=context
     )

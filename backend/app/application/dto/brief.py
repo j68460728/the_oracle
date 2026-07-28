@@ -53,11 +53,27 @@ class TeamBrief(BaseModel):
     key_player: Optional[dict] = None
 
 class BriefSummary(BaseModel):
-    home_strength_score: float
-    away_strength_score: float
-    edge: str # 'HOME', 'AWAY', 'EVEN'
-    confidence: str # e.g. '67%'
-    analysis: str
+    headline: str
+    key_factors: List[str]
+    confidence: int
+    confidence_label: str
+
+class ScoringDetail(BaseModel):
+    score: int
+    factors: dict
+
+class OracleScoring(BaseModel):
+    home: ScoringDetail
+    away: ScoringDetail
+
+class DataAvailability(BaseModel):
+    available: bool
+    reason: Optional[str] = None
+
+class BriefAvailability(BaseModel):
+    h2h: DataAvailability
+    advanced_metrics: DataAvailability
+    injuries: DataAvailability
 
 class MatchHistory(BaseModel):
     date: str
@@ -96,8 +112,10 @@ class BriefContext(BaseModel):
 class OracleBrief(BaseModel):
     metadata: BriefMetadata
     header: MatchInfo
-    summary: BriefSummary
     home_team: TeamBrief
     away_team: TeamBrief
+    scoring: OracleScoring
+    summary: BriefSummary
+    availability: BriefAvailability
     head_to_head: HeadToHeadBrief
     context: BriefContext

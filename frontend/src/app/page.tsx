@@ -58,6 +58,7 @@ export default async function Home(props: { searchParams: Promise<Record<string,
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8 items-start">
             <QuickSummary 
               summary={data.summary} 
+              scoring={data.scoring}
               homeTeamName={data.homeTeam.shortName} 
               awayTeamName={data.awayTeam.shortName} 
             />
