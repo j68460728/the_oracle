@@ -1,0 +1,37 @@
+# Environments
+.env
+.env.*
+!.env.example
+
+# Next.js / Node
+frontend/node_modules/
+frontend/.next/
+frontend/out/
+frontend/build/
+frontend/.swc/
+npm-debug.log
+yarn-error.log
+yarn-debug.log
+.pnpm-debug.log
+
+# Python
+backend/__pycache__/
+backend/.pytest_cache/
+*.py[cod]
+*$py.class
+*.so
+backend/.venv/
+backend/venv/
+backend/env/
+
+# Docker / Infrastructure
+.docker/
+
+# IDEs / OS / Editor
+.vscode/
+.idea/
+*.swp
+*.swo
+.DS_Store
+Thumbs.db
+.gemini/
