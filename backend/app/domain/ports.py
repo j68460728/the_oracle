@@ -11,7 +11,7 @@ class DataProviderPort(Protocol):
         """Fetch a match by its stable global identifier."""
         ...
         
-    async def get_standings(self, competition_code: str) -> StandingResponse:
+    async def get_standings(self, competition_code: str, season: Optional[str] = None) -> StandingResponse:
         """Fetch the current standings for a given competition."""
         ...
         

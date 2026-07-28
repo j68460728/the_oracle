@@ -17,8 +17,8 @@ class FootballDataProvider(DataProviderPort):
         json_data = await self._client.fetch_match(match_id)
         return adapters.map_match(json_data)
         
-    async def get_standings(self, competition_code: str) -> StandingResponse:
-        json_data = await self._client.fetch_standings(competition_code)
+    async def get_standings(self, competition_code: str, season: Optional[str] = None) -> StandingResponse:
+        json_data = await self._client.fetch_standings(competition_code, season)
         return adapters.map_standing_response(json_data)
         
     async def get_head_to_head(self, home_team_id: int, away_team_id: int) -> Head2Head:

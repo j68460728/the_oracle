@@ -53,8 +53,9 @@ class FootballDataClient:
     async def fetch_match(self, match_id: int) -> Dict[str, Any]:
         return await self._request("GET", f"/matches/{match_id}")
 
-    async def fetch_standings(self, competition_code: str) -> Dict[str, Any]:
-        return await self._request("GET", f"/competitions/{competition_code}/standings")
+    async def fetch_standings(self, competition_code: str, season: Optional[str] = None) -> Dict[str, Any]:
+        params = {"season": season} if season else None
+        return await self._request("GET", f"/competitions/{competition_code}/standings", params=params)
 
     async def fetch_head2head(self, match_id: int) -> Dict[str, Any]:
         return await self._request("GET", f"/matches/{match_id}/head2head")

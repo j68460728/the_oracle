@@ -17,7 +17,7 @@ import redis.asyncio as redis
 
 from domain.models import Team, Match, Standing, Scorer, Head2Head, Player
 
-from config import get_settings
+from config import settings
 
 class RateLimitException(Exception):
     """Raised when Football-Data.org rate limit would be exceeded."""
@@ -34,13 +34,13 @@ class FootballDataClient:
     """
     
     def __init__(self, redis_client=None):
-        self.settings = get_settings()
+        self.settings = settings
         self.redis = redis_client
         self.base_url = "https://api.football-data.org/v4"
         self.rate_limiter = RateLimiter(max_requests=10, window_minutes=1)
         self.session = httpx.AsyncClient(
             headers={
-                "X-Auth-Token": self.settings.football_data_api_token,
+                "X-Auth-Token": self.settings.FOOTBALL_DATA_API_KEY,
                 "X-Unfold-Lineups": "true",
                 "X-Unfold-Bookings": "true", 
                 "X-Unfold-Subs": "true",
@@ -285,7 +285,7 @@ class FootballDataClient:
                 goal_difference=item.get("goalDifference", 0),
                 goals_for=item.get("goalsFor", 0),
                 goals_against=item.get("goalsAgainst", 0),
-                form=item.get("form"),
+                recent_form=item.get("form"),
                 standing_type=self._parse_standing_type(item)
             )
             standings.append(standing)

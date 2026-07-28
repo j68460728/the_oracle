@@ -24,7 +24,7 @@ class GenerateOracleBriefUseCase:
         home_team = await self._provider.get_team_by_id(home_team_id)
         away_team = await self._provider.get_team_by_id(away_team_id)
         
-        standings_response = await self._provider.get_standings(competition_code)
+        standings_response = await self._provider.get_standings(competition_code, season)
         
         # Find standings for the specific teams
         home_standing = next((s for s in standings_response.standings if s.team.id == home_team_id), None)

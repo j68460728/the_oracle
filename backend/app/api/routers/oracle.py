@@ -17,7 +17,8 @@ async def generate_brief(
         brief = await use_case.execute(
             competition_code=competition_code,
             home_team_id=home_team_id,
-            away_team_id=away_team_id
+            away_team_id=away_team_id,
+            season="2024" # Default for now
         )
         return brief
     except ProviderRateLimitExceededException as e:

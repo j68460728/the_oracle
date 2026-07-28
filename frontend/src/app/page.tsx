@@ -8,6 +8,8 @@ import { DefensiveSolidity } from '@/modules/oracle/components/DefensiveSolidity
 import { KeyPlayers } from '@/modules/oracle/components/KeyPlayers';
 import { ContextFactors } from '@/modules/oracle/components/ContextFactors';
 import { AppSidebar } from '@/modules/oracle/components/AppSidebar';
+import { DataAvailability } from '@/modules/oracle/components/DataAvailability';
+import { OracleMethodology } from '@/modules/oracle/components/OracleMethodology';
 import { getOracleBrief } from '@/api/oracle.client';
 
 export const dynamic = 'force-dynamic';
@@ -94,16 +96,16 @@ export default async function Home(props: { searchParams: Promise<Record<string,
             />
           </div>
 
-          {/* Fila 3: Contexto y Jugadores Clave */}
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-10 items-start">
-            <div className="lg:col-span-2 flex flex-col">
+          {/* Fila 4: Contexto, Metodología y Disponibilidad */}
+          <div className="grid grid-cols-1 xl:grid-cols-3 gap-8 mb-10 items-start">
+            <div className="xl:col-span-1 flex flex-col h-full">
               <ContextFactors factors={data.contextFactors} />
             </div>
-            <div className="lg:col-span-1 flex flex-col">
-              <KeyPlayers 
-                homeTeam={data.homeTeam} 
-                awayTeam={data.awayTeam} 
-              />
+            <div className="xl:col-span-1 flex flex-col h-full">
+              <OracleMethodology score={data.scoring.home.score} />
+            </div>
+            <div className="xl:col-span-1 flex flex-col h-full">
+              <DataAvailability availability={data.availability} />
             </div>
           </div>
           

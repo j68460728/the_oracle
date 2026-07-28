@@ -8,3 +8,4 @@ redis
 python-dotenv
 python-json-logger
 aiolimiter
+pytest

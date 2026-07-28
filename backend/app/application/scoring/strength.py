@@ -13,8 +13,8 @@ def calculate_strength(points_per_game: float, form_score: float, position: int,
     
     # Position: top teams get up to 20 points, bottom teams get 0.
     # Inverse: position 1 gets 20, position 20 gets 0
-    if position and total_teams:
-        pos_component = max(0.0, 20.0 - ((position - 1) * (20.0 / total_teams)))
+    if position and total_teams and total_teams > 1:
+        pos_component = max(0.0, 20.0 - ((position - 1) / (total_teams - 1) * 20.0))
     else:
         pos_component = 10.0 # Default fallback
         
