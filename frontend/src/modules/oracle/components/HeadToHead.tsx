@@ -1,4 +1,4 @@
-import { MatchHistory, TeamBrief } from '@/types/oracle';
+import { MatchHistory, TeamBrief } from '@/types/domain/oracle';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { TeamCrest } from './TeamCrest';
 

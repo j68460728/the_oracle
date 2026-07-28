@@ -1,4 +1,4 @@
-import { ContextFactor } from '@/types/oracle';
+import { ContextFactor } from '@/types/domain/oracle';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Home, CalendarClock, UserX, AlertCircle, CloudRain, Target, Shield } from 'lucide-react';
 

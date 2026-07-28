@@ -1,4 +1,4 @@
-import { MatchInfo, TeamBrief } from '@/types/oracle';
+import { MatchInfo, TeamBrief } from '@/types/domain/oracle';
 import { Share2, Moon, Trophy, Calendar, MapPin, CloudSun, Clock, Database } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';

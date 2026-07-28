@@ -1,17 +1,42 @@
-import { mockOracleBrief } from '@/mocks/brief';
-import { BriefHeader } from '@/components/oracle/BriefHeader';
-import { QuickSummary } from '@/components/oracle/QuickSummary';
-import { RecentForm } from '@/components/oracle/RecentForm';
-import { LeaguePosition } from '@/components/oracle/LeaguePosition';
-import { HeadToHead } from '@/components/oracle/HeadToHead';
-import { GoalsAndAttack } from '@/components/oracle/GoalsAndAttack';
-import { DefensiveSolidity } from '@/components/oracle/DefensiveSolidity';
-import { KeyPlayers } from '@/components/oracle/KeyPlayers';
-import { ContextFactors } from '@/components/oracle/ContextFactors';
-import { AppSidebar } from '@/components/oracle/AppSidebar';
+import { BriefHeader } from '@/modules/oracle/components/BriefHeader';
+import { QuickSummary } from '@/modules/oracle/components/QuickSummary';
+import { RecentForm } from '@/modules/oracle/components/RecentForm';
+import { LeaguePosition } from '@/modules/oracle/components/LeaguePosition';
+import { HeadToHead } from '@/modules/oracle/components/HeadToHead';
+import { GoalsAndAttack } from '@/modules/oracle/components/GoalsAndAttack';
+import { DefensiveSolidity } from '@/modules/oracle/components/DefensiveSolidity';
+import { KeyPlayers } from '@/modules/oracle/components/KeyPlayers';
+import { ContextFactors } from '@/modules/oracle/components/ContextFactors';
+import { AppSidebar } from '@/modules/oracle/components/AppSidebar';
+import { getOracleBrief } from '@/api/oracle.client';
 
-export default function Home() {
-  const data = mockOracleBrief;
+export const dynamic = 'force-dynamic';
+
+export default async function Home(props: { searchParams: Promise<Record<string, string | string[] | undefined>> }) {
+  const searchParams = await props.searchParams;
+  
+  const competition = typeof searchParams.competition === 'string' ? searchParams.competition : 'PL';
+  const home = typeof searchParams.home === 'string' ? parseInt(searchParams.home, 10) : 65;
+  const away = typeof searchParams.away === 'string' ? parseInt(searchParams.away, 10) : 66;
+
+  let data;
+  try {
+    data = await getOracleBrief(competition, home, away);
+  } catch (error) {
+    return (
+      <div className="flex h-screen bg-[#070b14] text-slate-200 font-sans overflow-hidden">
+        <AppSidebar />
+        <main className="flex-1 flex flex-col items-center justify-center p-6">
+          <div className="text-center space-y-4">
+            <h1 className="text-4xl font-bold text-red-500">API Error</h1>
+            <p className="text-slate-400 max-w-lg">
+              No se pudo obtener el Oracle Brief. {(error as Error).message}
+            </p>
+          </div>
+        </main>
+      </div>
+    );
+  }
 
   return (
     <div className="flex h-screen bg-[#070b14] text-slate-200 font-sans overflow-hidden">
